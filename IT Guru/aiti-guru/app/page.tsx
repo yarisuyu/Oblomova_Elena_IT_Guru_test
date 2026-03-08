@@ -1,63 +1,66 @@
+'use client';
 import Image from "next/image";
+import IconInput from "./components/IconInput/IconInput";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    <div className="flex min-h-screen items-center justify-center bg-gray-500 font-sans dark:bg-black">
+      <main className="flex w-max flex-col items-center justify-between  dark:bg-black sm:items-start">
+        <div className="flex flex-col gap-8 items-center p-12 rounded-lg bg-white">
+          <div>
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              src="/assets/Лого.png"
+              alt="Лого"
+              width="52"
+              height="52"
+              className="bg-white rounded-full border-white border-4 p-1.5"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
+          <div className="flex flex-col items-center">
+            <h1 className="font-semibold text-4xl font-inter">Добро пожаловать!</h1>
+            <p className="font-inter font-medium text-lg text-gray-300">Пожалуйста, авторизуйтесь</p>
+          </div>
+          <form className="flex flex-col items-start" onSubmit={()=>{console.log("Авторизация успешна")}}>
+            <div>
+              <label htmlFor="User">Логин</label>
+                <IconInput
+                  type="text"
+                  firstIconSrc="/assets/icons/user icon.png"
+                  secondIconSrc="/assets/icons/cross.png"
+                  id="User"
+                  placeholder="test"
+                  className="w-96"
+                />
+            </div>
+            <div>
+              <label htmlFor="Password">
+                <div>
+                  Пароль
+                </div>
+                <IconInput
+                  type="password"
+                  firstIconSrc="/assets/icons/lock.png"
+                  secondIconSrc="/assets/icons/invisble.png"
+                  id="Password"
+                  placeholder="*************"
+                />
+              </label>
+            </div>
+            <div>
+              <label htmlFor="ShouldRemember">
+                <input type="checkbox" id="ShouldRemember"></input>
+                Запомнить данные
+              </label>
+            </div>
+            <button>Войти</button>
+            <div className="line-decorated w-full">или</div>
+          </form>
+          <div>
+            Нет аккаунта?
+            {" "}
+            <Link href="/" className="font-semibold text-lg text-blue-800 underline underline-offset-2">Создать</Link>
+          </div>
         </div>
       </main>
     </div>
