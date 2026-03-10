@@ -29,21 +29,16 @@ export default function Home() {
     })
       .then(res => {
         isError = !res.ok;
-        console.log("result", res, res.ok)
         return res.json()
       })
       .then((res) => {
         setError(isError);
         if (isError) {
-          console.log("error", error, res.message);
           setErrorMsg(res.message);
           return;
         } else {
-
-          console.log("no error", res);
           setErrorMsg("");
         }
-        console.log("redirect");
         redirect('/products', RedirectType.push);
       });
   }
