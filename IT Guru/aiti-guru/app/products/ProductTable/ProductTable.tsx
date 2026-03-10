@@ -5,6 +5,7 @@ import Pagination from "../../components/Pagination/Pagination";
 import { CATEGORIES } from "../../helpers/categories";
 import { formatPrice } from "@/app/helpers/helpers";
 import StyledCheckbox from "@/app/components/StyledCheckbox/StyledCheckbox";
+import AddProductForm from "./AddProductForm";
 
 const PAGE_SIZE = 20;
 const DATA_HOST = 'https://dummyjson.com/products';
@@ -13,11 +14,32 @@ function getPageCount(total: number, pageSize = PAGE_SIZE) {
   return Math.ceil(total / pageSize);
 }
 
+// Тип для позиции формы
+interface Position {
+  top: number;
+}
+
 export default function ProductTable({searchQuery}: {searchQuery: string}) {
   const [products, setProducts] = React.useState([]);
   const [offset, setOffset] = React.useState(0);
   const [productCount, setProductCount] = React.useState(0);
-  const [selectedProducts, setSelectedProducts] = React.useState([])
+  const [selectedProducts, setSelectedProducts] = React.useState([]);
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const [formPosition, setFormPosition] = React.useState<Position>({ top: 0 });
+
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
+
+  const toggleForm = () => setIsOpen(prev => !prev);
+
+  // Эффект для обновления позиции формы при открытии/закрытии
+  React.useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      // ✅ Безопасно читаем ref.current в эффекте, а не в рендере
+      setFormPosition({
+        top: (buttonRef.current).offsetHeight + 5
+      });
+    }
+  }, [isOpen]); // Зависимость от isOpen
 
   const getProductId = (id: number) => `product${id}`;
 
@@ -85,12 +107,17 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
           <button className="w-10.5 h-10.5 p-2.5 border rounded border-[#ECECEC]">
             <Image className="block w-full" width={22} height={22} src="/assets/icons/ArrowsClockwise.png" alt="Обновить"></Image>
           </button>
-          <button className="flex flex-row gap-3.5 px-5 py-2.5 rounded-md bg-blue-700">
-            <Image width={22} height={22} src="/assets/icons/PlusCircle.png" alt="Добавить"></Image>
-            <div className="text-white text-sm font-semibold">Добавить</div>
+          <button
+            className="flex flex-row gap-3.5 px-5 py-2.5 rounded-md bg-blue-700"
+            onClick={toggleForm}
+            ref={buttonRef}
+          >
+            {!isOpen && <Image width={22} height={22} src="/assets/icons/PlusCircle.png" alt="Добавить"></Image>}
+            <div className="text-white text-sm font-semibold">{isOpen ? "Закрыть" : "Добавить"}</div>
           </button>
         </div>
       </div>
+      {isOpen && <AddProductForm positionTop={formPosition.top} setIsOpen={setIsOpen} />}
 
       <div className="table">
         <div className="px-4 py-6">
