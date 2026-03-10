@@ -5,6 +5,7 @@ const IconInput = ({
   type,
   firstIconSrc,
   secondIconSrc,
+  required=false,
   id,
   placeholder,
   className = "",
@@ -14,6 +15,7 @@ const IconInput = ({
     type: string,
     firstIconSrc: string,
     secondIconSrc?: string,
+    required?: boolean
     id: string,
     placeholder?: string,
     className?: string,
@@ -25,6 +27,7 @@ const IconInput = ({
       <Image src={firstIconSrc} alt="" width={24} height={24}></Image>
       <input
         type={type}
+        required
         id={id}
         placeholder={placeholder}
         className={`border-0 focus:outline-0 ${className}`}

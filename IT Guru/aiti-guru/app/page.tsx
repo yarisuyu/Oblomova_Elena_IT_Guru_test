@@ -10,8 +10,11 @@ export default function Home() {
   const [login, setLogin] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [shouldRemember, setShouldRemember] = React.useState(false);
+  const [error, setError] = React.useState(false);
+  const [errorMsg, setErrorMsg] = React.useState("");
 
   async function SignIn() {
+    let isError = false;
     await fetch('https://dummyjson.com/auth/login', {
       method: 'POST',
       headers: {
@@ -24,8 +27,23 @@ export default function Home() {
         expiresInMins: 30, // optional, defaults to 60
       })
     })
-      .then(res => res.json())
-      .then(() => {
+      .then(res => {
+        isError = !res.ok;
+        console.log("result", res, res.ok)
+        return res.json()
+      })
+      .then((res) => {
+        setError(isError);
+        if (isError) {
+          console.log("error", error, res.message);
+          setErrorMsg(res.message);
+          return;
+        } else {
+
+          console.log("no error", res);
+          setErrorMsg("");
+        }
+        console.log("redirect");
         redirect('/products', RedirectType.push);
       });
   }
@@ -57,6 +75,7 @@ export default function Home() {
                   type="text"
                   firstIconSrc="/assets/icons/user icon.png"
                   secondIconSrc="/assets/icons/cross.png"
+                  required={true}
                   id="User"
                   placeholder="test"
                   className="w-96"
@@ -75,6 +94,7 @@ export default function Home() {
                   type="password"
                   firstIconSrc="/assets/icons/lock.png"
                   secondIconSrc="/assets/icons/invisble.png"
+                  required={true}
                   id="Password"
                   placeholder="*************"
                   value={password}
@@ -97,6 +117,10 @@ export default function Home() {
                 <div className="ml-10">Запомнить данные</div>
               </StyledCheckbox>
             </div>
+
+            {error && (
+              <div className="mt-1.5 text-red-400">{errorMsg}</div>
+            )}
             <button className="w-full px-4 py-2 rounded-xl border-blue-600 border-solid border bg-blue-700 text-white cursor-pointer">
               Войти
             </button>
