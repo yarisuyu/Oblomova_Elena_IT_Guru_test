@@ -5,6 +5,7 @@ import IconInput from "./components/IconInput/IconInput";
 import Link from "next/link";
 import { redirect, RedirectType } from 'next/navigation'
 import StyledCheckbox from "./components/StyledCheckbox/StyledCheckbox";
+import Button from "./components/Button/Button";
 
 export default function Home() {
   const [login, setLogin] = React.useState('');
@@ -116,9 +117,9 @@ export default function Home() {
             {error && (
               <div className="mt-1.5 text-red-400">{errorMsg}</div>
             )}
-            <button className="w-full px-4 py-2 rounded-xl border-blue-600 border-solid border bg-blue-700 text-white cursor-pointer">
+            <Button type="submit" primary styles="w-full px-2 py-4 text-lg rounded-xl">
               Войти
-            </button>
+            </Button>
             <div className="line-decorated w-full">или</div>
           </form>
           <div>

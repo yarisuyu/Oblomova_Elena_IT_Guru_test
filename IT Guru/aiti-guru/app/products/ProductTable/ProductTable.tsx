@@ -6,6 +6,7 @@ import { CATEGORIES } from "../../helpers/categories";
 import { formatPrice } from "@/app/helpers/helpers";
 import StyledCheckbox from "@/app/components/StyledCheckbox/StyledCheckbox";
 import AddProductForm from "./AddProductForm";
+import Button from "@/app/components/Button/Button";
 
 const PAGE_SIZE = 20;
 const DATA_HOST = 'https://dummyjson.com/products';
@@ -25,21 +26,8 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
   const [productCount, setProductCount] = React.useState(0);
   const [selectedProducts, setSelectedProducts] = React.useState([]);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
-  const [formPosition, setFormPosition] = React.useState<Position>({ top: 0 });
-
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
 
   const toggleForm = () => setIsOpen(prev => !prev);
-
-  // Эффект для обновления позиции формы при открытии/закрытии
-  React.useEffect(() => {
-    if (isOpen && buttonRef.current) {
-      // ✅ Безопасно читаем ref.current в эффекте, а не в рендере
-      setFormPosition({
-        top: (buttonRef.current).offsetHeight + 5
-      });
-    }
-  }, [isOpen]); // Зависимость от isOpen
 
   const getProductId = (id: number) => `product${id}`;
 
@@ -104,20 +92,20 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
       <div className="Header flex flex-row justify-between">
         <h4 className="font-bold text-xl">Все позиции</h4>
         <div className="flex flex-row gap-2">
-          <button className="w-10.5 h-10.5 p-2.5 border rounded border-[#ECECEC]">
+          <Button styles="w-10.5 h-10.5 p-2.5 border rounded">
             <Image className="block w-full" width={22} height={22} src="/assets/icons/ArrowsClockwise.png" alt="Обновить"></Image>
-          </button>
-          <button
-            className="flex flex-row gap-3.5 px-5 py-2.5 rounded-md bg-blue-700"
+          </Button>
+          <Button
+            primary
+            styles="flex flex-row gap-3.5 px-5 py-2.5 rounded-md"
             onClick={toggleForm}
-            ref={buttonRef}
           >
             {!isOpen && <Image width={22} height={22} src="/assets/icons/PlusCircle.png" alt="Добавить"></Image>}
-            <div className="text-white text-sm font-semibold">{isOpen ? "Закрыть" : "Добавить"}</div>
-          </button>
+            <div className="text-sm">{isOpen ? "Закрыть" : "Добавить"}</div>
+          </Button>
         </div>
       </div>
-      {isOpen && <AddProductForm positionTop={formPosition.top} setIsOpen={setIsOpen} />}
+      {isOpen && <AddProductForm setIsOpen={setIsOpen} />}
 
       <div className="table">
         <div className="px-4 py-6">
@@ -165,12 +153,12 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
                 <span className="text-gray-400">, {priceFractionalPart}</span>
               </div>
               <div className="flex flex-row items-center gap-8">
-                <button className="text-white px-3.5 py-1 rounded-[27px] bg-blue-700">
+                <Button primary styles="px-3.5 py-1 rounded-[27px]">
                   <div>
                     <Image width={24} height={24} src="/assets/icons/plus.png" alt="Добавить"></Image>
                   </div>
-                </button>
-                <button className="">
+                </Button>
+                <Button styles="border-0">
                   <Image
                     width={32}
                     height={32}
@@ -178,7 +166,7 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
                     alt="Подробности"
                     title="Подробности">
                   </Image>
-                </button>
+                </Button>
               </div>
             </div>
           );

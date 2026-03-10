@@ -1,5 +1,6 @@
 'use client';
 import Image from "next/image";
+import Button from "../Button/Button";
 
 export default function Pagination(
   { pageCount, offset = 0, setOffset }:
@@ -16,13 +17,13 @@ export default function Pagination(
         <Image src="/assets/icons/CaretLeft.png" alt="Предыдущая страница"></Image>
       </button>
       {Array.from(Array(pageCount).keys()).map(i => (
-          <button
+          <Button
             key={i}
-            className={`${i === offset && currentPage} w-7.5 h-7.5 rounded border border-gray-400 border-solid`}
+            styles={`${i === offset && currentPage} w-7.5 h-7.5 rounded`}
             onClick={() => setOffset(i) }
           >
             {i+1}
-          </button>
+          </Button>
         ))
       }
       <button disabled={offset >= pageCount} onClick={() => {

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, ChangeEvent, SubmitEventHandler, FormEvent } from 'react';
+import Button from '@/app/components/Button/Button';
+import { useState, useEffect, useRef, ChangeEvent, SubmitEventHandler } from 'react';
 // import './AddProductForm.css'; // стили для позиционирования и внешнего вида
 
 
@@ -16,7 +17,7 @@ interface ToastState {
   message: string;
 }
 
-const AddProductForm = ({positionTop, setIsOpen}: { positionTop: number, setIsOpen: (isOpen: boolean) => void}) => {
+const AddProductForm = ({setIsOpen}: {setIsOpen: (isOpen: boolean) => void}) => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     price: '',
@@ -122,11 +123,12 @@ const AddProductForm = ({positionTop, setIsOpen}: { positionTop: number, setIsOp
           />
         </label>
 
-        <button
+        <Button
           type="submit"
-          className="w-full py-2 px-4 bg-blue-700 text-white rounded border-0 cursor-pointer hover:bg-blue-800 transition">
+          primary
+          styles="w-full py-2 px-4 rounded transition">
           Добавить
-        </button>
+        </Button>
       </form>
 
       {toast.show && (
