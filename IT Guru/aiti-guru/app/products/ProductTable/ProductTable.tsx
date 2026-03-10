@@ -3,6 +3,8 @@ import React from "react";
 import Image from "next/image";
 import Pagination from "../../components/Pagination/Pagination";
 import { CATEGORIES } from "../../helpers/categories";
+import { formatPrice } from "@/app/helpers/helpers";
+import StyledCheckbox from "@/app/components/StyledCheckbox/StyledCheckbox";
 
 const PAGE_SIZE = 20;
 const DATA_HOST = 'https://dummyjson.com/products';
@@ -15,6 +17,39 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
   const [products, setProducts] = React.useState([]);
   const [offset, setOffset] = React.useState(0);
   const [productCount, setProductCount] = React.useState(0);
+  const [selectedProducts, setSelectedProducts] = React.useState([])
+
+  const getProductId = (id: number) => `product${id}`;
+
+  function isChecked(productId: string) {
+    const selected = selectedProducts.filter(id => id == productId);
+    if (selected.length > 0)
+      return true;
+    return false;
+  }
+
+  function areAllChecked() {
+    return selectedProducts.length === products.length && products.length > 0;
+  }
+
+  function changeIsChecked(productId: string) {
+    let newSelectedProducts = [];
+    if (isChecked(productId)) {
+      newSelectedProducts = selectedProducts.filter(id => id != productId);
+    } else {
+      newSelectedProducts = [...selectedProducts, productId];
+    }
+
+    setSelectedProducts(newSelectedProducts as never[]);
+  }
+
+  function changeAllIsChecked() {
+    if (selectedProducts.length > 0) {
+      setSelectedProducts([]);
+    } else {
+      setSelectedProducts([...products.map(p => getProductId((p as Product).id))] as never[]);
+    }
+  }
 
   //fetch('https://dummyjson.com/products/search?q=phone')
   //fetch('https://dummyjson.com/products?limit=10&skip=10&select=title,price')
@@ -23,14 +58,13 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
   //fetch('https://dummyjson.com/products/category/smartphones')
   React.useEffect(() => {
     async function loadProducts() {
-      const queryString = searchQuery ? `search?q=${searchQuery}&` : '?';
+      const queryString = searchQuery ? `/search?q=${searchQuery}&` : '?';
       const limitConstraints = `limit=${PAGE_SIZE}&skip=${offset * PAGE_SIZE}`;
       const url = `${DATA_HOST}${queryString}${limitConstraints}`;
 
       await fetch(url)
         .then(res => res.json())
         .then(items => {
-          console.log(items);
           if (!items || !items.products) {
             return;
           }
@@ -48,7 +82,7 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
       <div className="Header flex flex-row justify-between">
         <h4 className="font-bold text-xl">Все позиции</h4>
         <div className="flex flex-row gap-2">
-          <button className="p-2.5 border rounded border-[#ECECEC]">
+          <button className="w-10.5 h-10.5 p-2.5 border rounded border-[#ECECEC]">
             <Image className="block w-full" width={22} height={22} src="/assets/icons/ArrowsClockwise.png" alt="Обновить"></Image>
           </button>
           <button className="flex flex-row gap-3.5 px-5 py-2.5 rounded-md bg-blue-700">
@@ -59,37 +93,50 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
       </div>
 
       <div className="table">
-        <div className="grid gap-7 grid-flow-row grid-cols-[320px_3fr_3fr_2fr_2fr_2fr] px-4 py-6 font-bold text-gray-500 border-b border-solid border-gray-400">
-          <div className="flex flex-row gap-5">
-            <input type="checkbox" name="all-products" id="all-products" />
-            <label htmlFor="all-products"><h6>Наименование</h6></label>
+        <div className="px-4 py-6">
+          <div className="grid gap-7 grid-flow-row grid-cols-[320px_3fr_3fr_2fr_2fr_2fr] font-bold text-gray-500 border-b border-solid border-gray-400">
+            <StyledCheckbox name="all-products" checked={areAllChecked()} onChange={changeAllIsChecked} styles="h-5.5 w-5.5 rounded border border-gray-400 border-solid">
+              <h6 className="ml-10">Наименование</h6>
+            </StyledCheckbox>
+
+            <h4 className="text-align">Вендор</h4>
+            <h4 className="text-align">Артикул</h4>
+            <h4 className="text-align">Оценка</h4>
+            <h4 className="text-align">Цена, &#8381;</h4>
+            <h4>{""}</h4>
+            </div>
           </div>
-          <h4 className="text-align">Вендор</h4>
-          <h4 className="text-align">Артикул</h4>
-          <h4 className="text-align">Оценка</h4>
-          <h4 className="text-align">Цена, &#8381;</h4>
-          <h4>{""}</h4>
-        </div>
         {products && products.map(product => {
           const item = product as Product;
+          const [priceFormatted, priceFractionalPart] = formatPrice(item.price);
+          const productId = getProductId(item.id);
           return (
             <div key={item.id} className="grid gap-7 items-center grid-cols-[320px_3fr_3fr_2fr_2fr_2fr] border-b-2 border-solid border-gray-400 p-4.5">
-              <div className="flex flex-row items-center gap-4">
-                <div key={`${item.id}-check`}>
-                  <input type="checkbox" name="all-products" id={`${item.id}`} />
+              <StyledCheckbox
+                key={`${item.id}-check`}
+                name={productId}
+                checked={isChecked(productId)}
+                onChange={() => changeIsChecked(productId)}
+                styles="top-3 h-5.5 w-5.5 rounded border border-gray-400 border-solid"
+              >
+                <div className="flex flex-row items-center gap-4.5">
+                  <div className="ml-10">
+                    <Image width={48} height={48} className="bg-gray-500 rounded-lg" src={item.thumbnail} alt="Фото"></Image>
+                  </div>
+                  <div className="">
+                    <h6 className="max-w-45 text-nowrap overflow-hidden text-ellipsis" >{item.title}</h6>
+                    <p className="text-gray-600">{CATEGORIES[item.category]}</p>
+                  </div>
                 </div>
-                <div>
-                  <Image width={48} height={48} className="bg-gray-500 rounded-lg" src={item.thumbnail} alt="Фото"></Image>
-                </div>
-                <div className="">
-                  <h6 className="max-w-45 text-nowrap overflow-hidden text-ellipsis" >{item.title}</h6>
-                  <p className="text-gray-600">{CATEGORIES[item.category]}</p>
-                </div>
-              </div>
+              </StyledCheckbox>
+
               <div className="font-bold text-align" >{item.brand}</div>
               <div className="text-align" >{item.sku}</div>
-              <div className="text-align" >{item.rating}</div>
-              <div className="text-align" >{item.price}</div>
+              <div className="text-align" ><span className={`${item.rating < 4 && "text-red-400"}`}>{item.rating}</span>/5</div>
+              <div className="text-align" >
+                {priceFormatted}
+                <span className="text-gray-400">, {priceFractionalPart}</span>
+              </div>
               <div className="flex flex-row items-center gap-8">
                 <button className="text-white px-3.5 py-1 rounded-[27px] bg-blue-700">
                   <div>
@@ -97,7 +144,13 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
                   </div>
                 </button>
                 <button className="">
-                  <Image width={32} height={32} src="/assets/icons/DotsThreeCircle.png" alt="Подробности"></Image>
+                  <Image
+                    width={32}
+                    height={32}
+                    src="/assets/icons/DotsThreeCircle.png"
+                    alt="Подробности"
+                    title="Подробности">
+                  </Image>
                 </button>
               </div>
             </div>
@@ -109,7 +162,7 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
       <div className="flex flex-row justify-between">
         <div className="">
           Показано <span className="font-semibold">{offset * PAGE_SIZE + 1}-{(offset + 1) * PAGE_SIZE}</span>
-          из <span className="font-semibold">{productCount}</span>
+          {' '}из <span className="font-semibold">{productCount}</span>
         </div>
         <Pagination pageCount={getPageCount(productCount)} offset={offset} setOffset={setOffset} />
       </div>

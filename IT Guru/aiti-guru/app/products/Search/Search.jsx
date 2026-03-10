@@ -2,9 +2,10 @@
 import React from "react";
 import Image from "next/image";
 
-export default function Search({searchQuery, setSearchQuery}) {
+export default function Search({ searchQuery, setSearchQuery }) {
+  const [query, setQuery] = React.useState(searchQuery);
   return (
-    <div className="flex flex-row gap-2 rounded-lg px-3 py-5 bg-gray-950">
+    <form onSubmit={() => { setSearchQuery(query) }} className="w-1/2 flex flex-row gap-2 rounded-lg px-3 py-5 cursor-text bg-gray-950">
       <Image width={24} height={24} src="/assets/icons/search.png" alt="Поиск"></Image>
       <input
         type="text"
@@ -12,12 +13,11 @@ export default function Search({searchQuery, setSearchQuery}) {
         id="search"
         placeholder="Найти"
         className="border-0"
-        value={searchQuery}
+        value={query}
         onChange={(event) => {
-          console.log(event.target.value);
-          setSearchQuery(event.target.value);
+          setQuery(event.target.value);
         }}
       />
-    </div>
+    </form>
   );
 }
