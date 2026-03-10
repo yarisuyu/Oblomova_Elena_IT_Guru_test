@@ -132,7 +132,7 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
 
               <div className="font-bold text-align" >{item.brand}</div>
               <div className="text-align" >{item.sku}</div>
-              <div className="text-align" ><span className={`${item.rating < 4 && "text-red-400"}`}>{item.rating}</span>/5</div>
+              <div className="text-align" ><span className={`${item.rating < 3 && "text-red-400"}`}>{item.rating}</span>/5</div>
               <div className="text-align" >
                 {priceFormatted}
                 <span className="text-gray-400">, {priceFractionalPart}</span>
