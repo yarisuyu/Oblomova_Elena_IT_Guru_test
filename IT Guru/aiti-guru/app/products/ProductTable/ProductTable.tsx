@@ -9,15 +9,9 @@ import AddProductForm from "./AddProductForm";
 import Button from "@/app/components/Button/Button";
 
 const PAGE_SIZE = 20;
-const DATA_HOST = 'https://dummyjson.com/products';
 
 function getPageCount(total: number, pageSize = PAGE_SIZE) {
   return Math.ceil(total / pageSize);
-}
-
-// Тип для позиции формы
-interface Position {
-  top: number;
 }
 
 export default function ProductTable({searchQuery}: {searchQuery: string}) {
@@ -70,7 +64,7 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
     async function loadProducts() {
       const queryString = searchQuery ? `/search?q=${searchQuery}&` : '?';
       const limitConstraints = `limit=${PAGE_SIZE}&skip=${offset * PAGE_SIZE}`;
-      const url = `${DATA_HOST}${queryString}${limitConstraints}`;
+      const url = `/products-dummy${queryString}${limitConstraints}`;
 
       await fetch(url)
         .then(res => res.json())
@@ -176,8 +170,17 @@ export default function ProductTable({searchQuery}: {searchQuery: string}) {
 
       <div className="flex flex-row justify-between">
         <div className="">
-          Показано <span className="font-semibold">{offset * PAGE_SIZE + 1}-{(offset + 1) * PAGE_SIZE}</span>
-          {' '}из <span className="font-semibold">{productCount}</span>
+          {productCount === 0 ?(
+            <>
+              Показано <span className="font-semibold">0</span> из
+              {' '}<span className="font-semibold">0</span>
+            </>
+            ) : (
+              <>
+                Показано <span className="font-semibold">{offset * PAGE_SIZE + 1}-{(offset + 1) * PAGE_SIZE}</span>
+                {' '}из <span className="font-semibold">{productCount}</span>
+              </>
+          )}
         </div>
         <Pagination pageCount={getPageCount(productCount)} offset={offset} setOffset={setOffset} />
       </div>

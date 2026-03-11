@@ -8,15 +8,15 @@ import StyledCheckbox from "./components/StyledCheckbox/StyledCheckbox";
 import Button from "./components/Button/Button";
 
 export default function Home() {
-  const [login, setLogin] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [login, setLogin] = React.useState('emilys');
+  const [password, setPassword] = React.useState('emilyspass');
   const [shouldRemember, setShouldRemember] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState("");
 
   async function SignIn() {
     let isError = false;
-    await fetch('https://dummyjson.com/auth/login', {
+    await fetch('/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -26,7 +26,9 @@ export default function Home() {
         username: login,
         password: password,
         expiresInMins: 30, // optional, defaults to 60
-      })
+      }),
+      credentials: 'include' // Include cookies (e.g., accessToken) in the request
+
     })
       .then(res => {
         isError = !res.ok;

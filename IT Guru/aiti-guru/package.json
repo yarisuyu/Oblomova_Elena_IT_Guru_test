@@ -2,15 +2,19 @@
   "name": "aiti-guru",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:4000",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next-remote-watch",
     "lint": "eslint"
   },
   "dependencies": {
+    "http-proxy-middleware": "^3.0.5",
     "next": "16.1.6",
     "next-image-loader": "^3.0.0",
+    "next-remote-watch": "^2.0.0",
+    "npm-watch": "^0.13.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
