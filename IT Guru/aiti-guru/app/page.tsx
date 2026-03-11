@@ -4,15 +4,17 @@ import React from "react";
 import IconInput from "./components/IconInput/IconInput";
 import Link from "next/link";
 import { redirect, RedirectType } from 'next/navigation'
+import { useAuth } from './providers/AuthProvider';
 import StyledCheckbox from "./components/StyledCheckbox/StyledCheckbox";
 import Button from "./components/Button/Button";
 
 export default function Home() {
-  const [login, setLogin] = React.useState('emilys');
+  const [username, setUsername] = React.useState('emilys');
   const [password, setPassword] = React.useState('emilyspass');
   const [shouldRemember, setShouldRemember] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState("");
+  const { login } = useAuth();
 
   async function SignIn() {
     let isError = false;
@@ -23,7 +25,7 @@ export default function Home() {
       },
       body: JSON.stringify({
 
-        username: login,
+        username: username,
         password: password,
         expiresInMins: 30, // optional, defaults to 60
       }),
@@ -42,6 +44,9 @@ export default function Home() {
         } else {
           setErrorMsg("");
         }
+
+        login(res.accessToken, shouldRemember);
+
         redirect('/products', RedirectType.push);
       });
   }
@@ -65,6 +70,7 @@ export default function Home() {
           </div>
           <form className="flex flex-col gap-5 items-start" onSubmit={(e) => {
             e.preventDefault();
+            setError(false);
             SignIn();
           }}>
             <div>
@@ -77,9 +83,9 @@ export default function Home() {
                   id="User"
                   placeholder="test"
                   className="w-96"
-                  value={login}
+                  value={username}
                   onChange={(e) => {
-                    setLogin((e.target as HTMLInputElement).value)
+                    setUsername((e.target as HTMLInputElement).value)
                   }}
                 />
             </div>

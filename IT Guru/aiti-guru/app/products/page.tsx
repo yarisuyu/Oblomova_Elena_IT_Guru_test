@@ -1,13 +1,8 @@
 'use client';
 import Image from "next/image";
-import Search from "./Search/Search";
 import ProductTable from "./ProductTable/ProductTable";
-import { Geist } from 'next/font/google'
 import React from "react";
 
-const geist = Geist({
-  subsets: ['latin'],
-})
 
 export default function Products() {
   const [query, setQuery] = React.useState('');
