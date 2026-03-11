@@ -1,7 +1,11 @@
-import { MouseEventHandler } from "react";
+import { ComponentPropsWithoutRef } from "react";
 
-function Button({ primary=false, type="button", styles, onClick, children }:
-  {primary?: boolean, type?: "submit" | "button" | "reset" | undefined, styles?: string, onClick?: MouseEventHandler, children: React.ReactNode}
+interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
+  primary?: boolean;
+  styles?: string;
+}
+
+function Button({ primary=false, type="button", styles, onClick, children, ...rest }: ButtonProps
 ) {
   const commonStyles = "font-semibold cursor-pointer";
   const primaryStyles = "bg-blue-700 border-blue-600 border-solid border text-white hover:bg-blue-600";
@@ -10,8 +14,9 @@ function Button({ primary=false, type="button", styles, onClick, children }:
   return (
     <button
       type={type}
-      className={`${commonStyles} ${primary? primaryStyles : secondaryStyles} ${styles} `}
+      className={`${commonStyles} ${primary ? primaryStyles : secondaryStyles} ${styles}`}
       onClick={onClick}
+      {...rest}
     >
       {children}
     </button>
