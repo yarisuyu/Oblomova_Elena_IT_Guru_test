@@ -27,7 +27,7 @@ const IconInput = ({
       <Image src={firstIconSrc} alt="" width={24} height={24}></Image>
       <input
         type={type}
-        required
+        required={required}
         id={id}
         placeholder={placeholder}
         className={`border-0 focus:outline-0 ${className}`}
